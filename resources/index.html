@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Fireworks</title>
+    <style>
+        @font-face {
+            font-family: 'KrasnodarGroteskTrial';
+            src: url('./fonts/KrasnodarGroteskTrial.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        html {
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: modalFadeIn 0.5s ease-out;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 350px;
+            width: 90%;
+            border: 1px solid #ddd;
+        }
+
+        .modal-content h2 {
+            color: #333;
+            font-family: 'KrasnodarGroteskTrial', Arial, sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: normal;
+        }
+
+        .modal-content p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-weight: normal;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: normal;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'KrasnodarGroteskTrial', Arial, sans-serif;
+            background: white;
+            color: #666;
+        }
+
+        .modal-btn:hover {
+            border-color: #bbb;
+            background: #f9f9f9;
+        }
+
+        .music-btn {
+            border-color: #ffb3ba;
+            color: #ff69b4;
+        }
+
+        .music-btn:hover {
+            border-color: #ff69b4;
+            background: #fff5f7;
+            color: #ff1493;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Адаптивность модального окна */
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+                max-width: 300px;
+            }
+
+            .modal-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .modal-content p {
+                font-size: 1rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+                width: 100%;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .birthday-text {
+            color: #fff;
+            font-family: 'KrasnodarGroteskTrial', Arial, sans-serif;
+            font-size: 4rem;
+            font-weight: normal;
+            text-align: center;
+            z-index: 10;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: fit-content;
+            border-right: 3px solid #fff;
+            animation: typing 2.5s steps(15, end), rainbow 4s ease-in-out 2.5s infinite, stopGrowing 1s 2.5s forwards;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .birthday-text {
+                font-size: 2.5rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .signature {
+            color: #ffb3ba;
+            font-family: 'KrasnodarGroteskTrial', Arial, sans-serif;
+            font-size: 1.2rem;
+            font-weight: normal;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 2rem;
+            line-height: 1.4;
+            opacity: 0;
+            animation: fadeInText 2s ease-in-out 4s forwards;
+            text-shadow: 0 0 10px rgba(255, 179, 186, 0.5);
+        }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .signature {
+                font-size: 1rem;
+                margin-top: 1.5rem;
+                max-width: 90%;
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signature {
+                font-size: 0.9rem;
+                margin-top: 1rem;
+                max-width: 95%;
+                padding: 0 0.5rem;
+                line-height: 1.3;
+            }
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 70%; }
+        }
+
+        @keyframes stopGrowing {
+            to { width: fit-content; }
+        }
+
+
+        @keyframes cursorBlink {
+            0%, 50% { border-color: transparent; }
+            51%, 100% { border-color: #fff; }
+        }
+
+        @keyframes rainbow {
+            0% { color: #fff; }
+            16% { color: #ffb3ba; }
+            33% { color: #ff69b4; }
+            50% { color: #ff1493; }
+            66% { color: #da70d6; }
+            83% { color: #ffb6c1; }
+            100% { color: #fff; }
+        }
+
+
+        .firework {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: explode 2s ease-out forwards;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+            animation: burst 1.5s ease-out forwards;
+            box-shadow: 0 0 6px currentColor;
+        }
+
+        /* Mobile styles for fireworks */
+        @media (max-width: 768px) {
+            .firework {
+                width: 10px;
+                height: 10px;
+                box-shadow: 0 0 12px currentColor;
+            }
+
+            .particle {
+                width: 5px;
+                height: 5px;
+                box-shadow: 0 0 8px currentColor;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .firework {
+                width: 12px;
+                height: 12px;
+                box-shadow: 0 0 15px currentColor;
+            }
+
+            .particle {
+                width: 6px;
+                height: 6px;
+                box-shadow: 0 0 10px currentColor;
+            }
+        }
+
+        @keyframes burst {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 1;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно с запросом музыки -->
+    <div id="musicModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>С днем рождения!</h2>
+            <p>С музыкой?</p>
+            <div class="modal-buttons">
+                <button id="playWithMusic" class="modal-btn music-btn">Да</button>
+                <button id="playWithoutMusic" class="modal-btn no-music-btn">Нет</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="birthday-text">С днем рождения!</div>
+        <div class="signature">Ксюша, ты знаешь, как я тебя люблю, и сегодня я хочу пожелать тебе всего-всего самого лучшего на свете — чтобы каждая твоя мечта сбывалась, а каждый день был наполнен радостью и любовью, которую ты как никто другой заслуживаешь.</div>
+    </div>
+
+    <audio id="birthdayMusic" loop preload="auto">
+        <source src="./music/CHajj_Vdvojom_-_Voskresene_Den_Rozhdeniya_u_Tebya_63207405.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио элемент.
+    </audio>
+
+    <script>
+        const colors = ['#ffb3ba', '#ff69b4', '#ff1493', '#db7093', '#c71585', '#da70d6', '#d8bfd8', '#dda0dd', '#ee82ee', '#ffb6c1', '#ffc0cb', '#ffe4e1', '#ff7f50', '#ff6347', '#ff69b4', '#ff1493', '#dc143c', '#b22222'];
+
+        // Mobile detection
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+
+        // Adaptive parameters
+        const particleCount = isSmallMobile ? 20 : isMobile ? 25 : 25;
+        const minDistance = isSmallMobile ? 60 : isMobile ? 100 : 80;
+        const maxDistance = isSmallMobile ? 150 : isMobile ? 220 : 200;
+        const fireworkInterval = isSmallMobile ? 400 : isMobile ? 300 : 300;
+
+        function createFirework(x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = x + 'px';
+            firework.style.top = y + 'px';
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(firework);
+
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = Math.random() * (maxDistance - minDistance) + minDistance;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+
+                document.body.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 1500);
+            }
+
+            setTimeout(() => {
+                firework.remove();
+            }, 2000);
+        }
+
+        function startFireworks() {
+            const interval = setInterval(() => {
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight; // Fireworks across entire screen
+                createFirework(x, y);
+            }, fireworkInterval);
+
+            // Stop after 7 seconds
+            setTimeout(() => {
+                clearInterval(interval);
+            }, 7000);
+        }
+
+        // Обработчики для модального окна
+        document.getElementById('playWithMusic').addEventListener('click', function() {
+            startShow(true);
+        });
+
+        document.getElementById('playWithoutMusic').addEventListener('click', function() {
+            startShow(false);
+        });
+
+        function startShow(withMusic) {
+            // Скрываем модальное окно
+            document.getElementById('musicModal').style.display = 'none';
+
+            // Показываем основное содержимое
+            document.getElementById('mainContent').style.display = 'flex';
+
+            // Запускаем музыку если выбрано
+            if (withMusic) {
+                const audio = document.getElementById('birthdayMusic');
+                audio.play().catch(e => {
+                    console.log('Не удалось запустить музыку:', e);
+                });
+            }
+
+            // Запускаем фейрверки
+            startFireworks();
+
+            // Additional random fireworks throughout
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight;
+                    createFirework(x, y);
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>
